@@ -2,6 +2,7 @@
 
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
 local SoundService = game:GetService("SoundService")
 local player = Players.LocalPlayer
 
@@ -11,34 +12,63 @@ screenGui.Name = "MKGui"
 screenGui.Parent = player:WaitForChild("PlayerGui")
 screenGui.ResetOnSpawn = false
 
--- Painel
+-- Painel principal
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 350, 0, 200)
-frame.Position = UDim2.new(0.5, -175, 0.3, 0)
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.Size = UDim2.new(0, 450, 0, 300)
+frame.Position = UDim2.new(0.5, -225, 0.25, 0)
+frame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 frame.BorderSizePixel = 0
 frame.Visible = false
 frame.ClipsDescendants = true
 frame.Parent = screenGui
 
--- Bordas arredondadas
 local corner = Instance.new("UICorner")
-corner.CornerRadius = UDim.new(0, 15)
+corner.CornerRadius = UDim.new(0, 25)
 corner.Parent = frame
 
--- Fundo com imagem Shao Kahn
+-- Fundo com Shao Kahn
 local bgImage = Instance.new("ImageLabel")
 bgImage.Size = UDim2.new(1, 0, 1, 0)
 bgImage.Position = UDim2.new(0, 0, 0, 0)
-bgImage.Image = "rbxassetid://SEU_ASSET_ID_AQUI" -- <<< troque pelo ID do decal de Shao Kahn
+bgImage.Image = "rbxassetid://SEU_ASSET_ID_AQUI" -- troque pelo ID do decal de Shao Kahn
 bgImage.BackgroundTransparency = 1
-bgImage.ImageTransparency = 0.15
+bgImage.ImageTransparency = 0.2
 bgImage.Parent = frame
 
--- Botão pegar WaterBall
+-- Símbolos do dragão MK flutuantes
+for i = 1, 5 do
+    local symbol = Instance.new("ImageLabel")
+    symbol.Size = UDim2.new(0, 50, 0, 50)
+    symbol.Position = UDim2.new(math.random(), 0, math.random(), 0)
+    symbol.Image = "rbxassetid://133689035" -- logo dragão MK
+    symbol.BackgroundTransparency = 1
+    symbol.ImageTransparency = 0.5
+    symbol.Parent = frame
+
+    -- Animação flutuar
+    coroutine.wrap(function()
+        while true do
+            local newPos = UDim2.new(math.random(), 0, math.random(), 0)
+            TweenService:Create(symbol, TweenInfo.new(3, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {Position = newPos}):Play()
+            wait(3)
+        end
+    end)()
+end
+
+-- Partículas de fogo
+local fireParticles = Instance.new("ParticleEmitter")
+fireParticles.Texture = "rbxassetid://241594314" -- textura de fogo
+fireParticles.Lifetime = NumberRange.new(1, 2)
+fireParticles.Rate = 10
+fireParticles.Speed = NumberRange.new(5, 10)
+fireParticles.Rotation = NumberRange.new(0, 360)
+fireParticles.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.5), NumberSequenceKeypoint.new(1, 0)})
+fireParticles.Parent = frame
+
+-- Botão pegar WaterBall com glow
 local getButton = Instance.new("TextButton")
-getButton.Size = UDim2.new(0.6, 0, 0.3, 0)
-getButton.Position = UDim2.new(0.2, 0, 0.55, 0)
+getButton.Size = UDim2.new(0.5, 0, 0.25, 0)
+getButton.Position = UDim2.new(0.25, 0, 0.65, 0)
 getButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 getButton.Text = "Pegar WaterBall"
 getButton.Font = Enum.Font.Arcade
@@ -47,13 +77,27 @@ getButton.TextScaled = true
 getButton.Parent = frame
 
 local buttonCorner = Instance.new("UICorner")
-buttonCorner.CornerRadius = UDim.new(0, 10)
+buttonCorner.CornerRadius = UDim.new(0, 20)
 buttonCorner.Parent = getButton
+
+-- Glow do botão
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Thickness = 3
+uiStroke.Color = Color3.fromRGB(255, 100, 0)
+uiStroke.Parent = getButton
+
+-- Efeito hover no botão
+getButton.MouseEnter:Connect(function()
+    TweenService:Create(getButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 50, 50)}):Play()
+end)
+getButton.MouseLeave:Connect(function()
+    TweenService:Create(getButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(200, 0, 0)}):Play()
+end)
 
 -- Assinatura
 local assinatura = Instance.new("TextLabel")
 assinatura.Size = UDim2.new(1, -10, 0, 25)
-assinatura.Position = UDim2.new(0, 5, 1, -30)
+assinatura.Position = UDim2.new(0, 5, 1, -35)
 assinatura.BackgroundTransparency = 1
 assinatura.Text = "Feito por Thi"
 assinatura.Font = Enum.Font.Arcade
@@ -63,22 +107,22 @@ assinatura.Parent = frame
 
 -- Botão fechar
 local closeButton = Instance.new("TextButton")
-closeButton.Size = UDim2.new(0, 40, 0, 40)
-closeButton.Position = UDim2.new(1, -45, 0, 5)
+closeButton.Size = UDim2.new(0, 50, 0, 50)
+closeButton.Position = UDim2.new(1, -60, 0, 10)
 closeButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
 closeButton.Text = "X"
 closeButton.Font = Enum.Font.SourceSansBold
-closeButton.TextSize = 20
+closeButton.TextSize = 24
 closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 closeButton.Parent = frame
 
 local closeCorner = Instance.new("UICorner")
-closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.CornerRadius = UDim.new(0, 15)
 closeCorner.Parent = closeButton
 
 -- Botão flutuante para abrir
 local toggleButton = Instance.new("TextButton")
-toggleButton.Size = UDim2.new(0, 140, 0, 50)
+toggleButton.Size = UDim2.new(0, 170, 0, 60)
 toggleButton.Position = UDim2.new(0.05, 0, 0.85, 0)
 toggleButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 toggleButton.Text = "Abrir Painel MK"
@@ -88,7 +132,7 @@ toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 toggleButton.Parent = screenGui
 
 local toggleCorner = Instance.new("UICorner")
-toggleCorner.CornerRadius = UDim.new(0, 10)
+toggleCorner.CornerRadius = UDim.new(0, 15)
 toggleCorner.Parent = toggleButton
 
 -- Som de clique
@@ -101,7 +145,7 @@ local function playClick()
     clickSound:Play()
 end
 
--- Funções de abrir/fechar com fade
+-- Funções abrir/fechar com fade
 local function openPanel()
     playClick()
     frame.Visible = true
@@ -118,7 +162,6 @@ local function closePanel()
     end)
 end
 
--- Botões
 toggleButton.MouseButton1Click:Connect(function()
     if frame.Visible then
         closePanel()
