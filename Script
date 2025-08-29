@@ -1,9 +1,126 @@
-local p=game.Players.LocalPlayer
-local g=Instance.new("ScreenGui",p:WaitForChild("PlayerGui"));g.Name="MKGui";g.ResetOnSpawn=false
-local f=Instance.new("Frame",g);f.Size=UDim2.new(0,350,0,200);f.Position=UDim2.new(0.5,-175,0.3,0);f.BackgroundColor3=Color3.new(0,0,0);f.BorderSizePixel=4;f.BorderColor3=Color3.new(200/255,0,0);f.Visible=false
-local bg=Instance.new("ImageLabel",f);bg.Size=UDim2.new(1,0,1,0);bg.Position=UDim2.new(0,0,0,0);bg.Image="rbxassetid://SEU_ASSET_ID_AQUI";bg.BackgroundTransparency=1;bg.ImageTransparency=0.2
-local b=Instance.new("TextButton",f);b.Size=UDim2.new(0.6,0,0.3,0);b.Position=UDim2.new(0.2,0,0.55,0);b.BackgroundColor3=Color3.new(200/255,0,0);b.Text="Pegar WaterBall";b.Font=Enum.Font.Arcade;b.TextColor3=Color3.new(1,215/255,0);b.TextScaled=true
-local a=Instance.new("TextLabel",f);a.Size=UDim2.new(1,-10,0,25);a.Position=UDim2.new(0,5,1,-30);a.BackgroundTransparency=1;a.Text="Feito por Thi";a.Font=Enum.Font.Arcade;a.TextColor3=Color3.new(1,215/255,0);a.TextScaled=true
-local c=Instance.new("TextButton",f);c.Size=UDim2.new(0,40,0,40);c.Position=UDim2.new(1,-45,0,5);c.BackgroundColor3=Color3.new(150/255,0,0);c.Text="X";c.Font=Enum.Font.SourceSansBold;c.TextSize=20;c.TextColor3=Color3.new(1,1,1);c.MouseButton1Click:Connect(function() f.Visible=false end)
-local t=Instance.new("TextButton",g);t.Size=UDim2.new(0,120,0,50);t.Position=UDim2.new(0.05,0,0.85,0);t.BackgroundColor3=Color3.new(200/255,0,0);t.Text="Abrir Painel MK";t.Font=Enum.Font.SourceSansBold;t.TextSize=18;t.TextColor3=Color3.new(1,1,1);t.MouseButton1Click:Connect(function() f.Visible=not f.Visible end)
-b.MouseButton1Click:Connect(function() if not p.Backpack:FindFirstChild("WaterBall") then local tool=game.ReplicatedStorage.Powers.WaterBall:Clone();tool.Parent=p.Backpack end end)
+-- LocalScript em StarterPlayerScripts
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local SoundService = game:GetService("SoundService")
+local player = Players.LocalPlayer
+
+-- ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "MKGui"
+screenGui.Parent = player:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
+
+-- Painel com bordas arredondadas
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 350, 0, 200)
+frame.Position = UDim2.new(0.5, -175, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+frame.BorderSizePixel = 0
+frame.Visible = false
+frame.ClipsDescendants = true
+frame.Parent = screenGui
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 15)
+corner.Parent = frame
+
+-- Fundo com Shao Kahn
+local bgImage = Instance.new("ImageLabel")
+bgImage.Size = UDim2.new(1, 0, 1, 0)
+bgImage.Position = UDim2.new(0, 0, 0, 0)
+bgImage.Image = "rbxassetid://SEU_ASSET_ID_AQUI" -- coloque aqui
+bgImage.BackgroundTransparency = 1
+bgImage.ImageTransparency = 0.15
+bgImage.Parent = frame
+
+-- Botão Pegar WaterBall
+local getButton = Instance.new("TextButton")
+getButton.Size = UDim2.new(0.6, 0, 0.3, 0)
+getButton.Position = UDim2.new(0.2, 0, 0.55, 0)
+getButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+getButton.Text = "Pegar WaterBall"
+getButton.Font = Enum.Font.Arcade
+getButton.TextColor3 = Color3.fromRGB(255, 215, 0)
+getButton.TextScaled = true
+getButton.Parent = frame
+local buttonCorner = Instance.new("UICorner")
+buttonCorner.CornerRadius = UDim.new(0, 10)
+buttonCorner.Parent = getButton
+
+-- Assinatura
+local assinatura = Instance.new("TextLabel")
+assinatura.Size = UDim2.new(1, -10, 0, 25)
+assinatura.Position = UDim2.new(0, 5, 1, -30)
+assinatura.BackgroundTransparency = 1
+assinatura.Text = "Feito por Thi"
+assinatura.Font = Enum.Font.Arcade
+assinatura.TextColor3 = Color3.fromRGB(255, 215, 0)
+assinatura.TextScaled = true
+assinatura.Parent = frame
+
+-- Botão fechar
+local closeButton = Instance.new("TextButton")
+closeButton.Size = UDim2.new(0, 40, 0, 40)
+closeButton.Position = UDim2.new(1, -45, 0, 5)
+closeButton.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+closeButton.Text = "X"
+closeButton.Font = Enum.Font.SourceSansBold
+closeButton.TextSize = 20
+closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeButton.Parent = frame
+local closeCorner = Instance.new("UICorner")
+closeCorner.CornerRadius = UDim.new(0, 8)
+closeCorner.Parent = closeButton
+
+-- Botão flutuante (PC e celular)
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 140, 0, 50)
+toggleButton.Position = UDim2.new(0.05, 0, 0.85, 0)
+toggleButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+toggleButton.Text = "Abrir Painel MK"
+toggleButton.Font = Enum.Font.SourceSansBold
+toggleButton.TextSize = 18
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.Parent = screenGui
+local toggleCorner = Instance.new("UICorner")
+toggleCorner.CornerRadius = UDim.new(0, 10)
+toggleCorner.Parent = toggleButton
+
+-- Som de clique
+local clickSound = Instance.new("Sound")
+clickSound.SoundId = "rbxassetid://12221967"
+clickSound.Volume = 1
+clickSound.Parent = SoundService
+local function playClick() clickSound:Play() end
+
+-- Efeito fade in/out
+local function openPanel()
+    playClick()
+    frame.Visible = true
+    frame.BackgroundTransparency = 1
+    TweenService:Create(frame, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+end
+local function closePanel()
+    playClick()
+    local tween = TweenService:Create(frame, TweenInfo.new(0.5), {BackgroundTransparency = 1})
+    tween:Play()
+    tween.Completed:Connect(function() frame.Visible = false end)
+end
+
+toggleButton.MouseButton1Click:Connect(function()
+    frame.Visible and closePanel() or openPanel()
+end)
+closeButton.MouseButton1Click:Connect(function() closePanel() end)
+
+-- Dar WaterBall ao clicar
+local function giveTool()
+    if not player.Backpack:FindFirstChild("WaterBall") then
+        local tool = game.ReplicatedStorage.Powers.WaterBall:Clone()
+        tool.Parent = player.Backpack
+    end
+end
+getButton.MouseButton1Click:Connect(function()
+    playClick()
+    giveTool()
+end)
