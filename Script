@@ -1,0 +1,9 @@
+local p=game.Players.LocalPlayer
+local g=Instance.new("ScreenGui",p:WaitForChild("PlayerGui"));g.Name="MKGui";g.ResetOnSpawn=false
+local f=Instance.new("Frame",g);f.Size=UDim2.new(0,350,0,200);f.Position=UDim2.new(0.5,-175,0.3,0);f.BackgroundColor3=Color3.new(0,0,0);f.BorderSizePixel=4;f.BorderColor3=Color3.new(200/255,0,0);f.Visible=false
+local bg=Instance.new("ImageLabel",f);bg.Size=UDim2.new(1,0,1,0);bg.Position=UDim2.new(0,0,0,0);bg.Image="rbxassetid://SEU_ASSET_ID_AQUI";bg.BackgroundTransparency=1;bg.ImageTransparency=0.2
+local b=Instance.new("TextButton",f);b.Size=UDim2.new(0.6,0,0.3,0);b.Position=UDim2.new(0.2,0,0.55,0);b.BackgroundColor3=Color3.new(200/255,0,0);b.Text="Pegar WaterBall";b.Font=Enum.Font.Arcade;b.TextColor3=Color3.new(1,215/255,0);b.TextScaled=true
+local a=Instance.new("TextLabel",f);a.Size=UDim2.new(1,-10,0,25);a.Position=UDim2.new(0,5,1,-30);a.BackgroundTransparency=1;a.Text="Feito por Thi";a.Font=Enum.Font.Arcade;a.TextColor3=Color3.new(1,215/255,0);a.TextScaled=true
+local c=Instance.new("TextButton",f);c.Size=UDim2.new(0,40,0,40);c.Position=UDim2.new(1,-45,0,5);c.BackgroundColor3=Color3.new(150/255,0,0);c.Text="X";c.Font=Enum.Font.SourceSansBold;c.TextSize=20;c.TextColor3=Color3.new(1,1,1);c.MouseButton1Click:Connect(function() f.Visible=false end)
+local t=Instance.new("TextButton",g);t.Size=UDim2.new(0,120,0,50);t.Position=UDim2.new(0.05,0,0.85,0);t.BackgroundColor3=Color3.new(200/255,0,0);t.Text="Abrir Painel MK";t.Font=Enum.Font.SourceSansBold;t.TextSize=18;t.TextColor3=Color3.new(1,1,1);t.MouseButton1Click:Connect(function() f.Visible=not f.Visible end)
+b.MouseButton1Click:Connect(function() if not p.Backpack:FindFirstChild("WaterBall") then local tool=game.ReplicatedStorage.Powers.WaterBall:Clone();tool.Parent=p.Backpack end end)
